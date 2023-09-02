@@ -1,70 +1,65 @@
 package service;
 
-import dao.FileDao;
-import model.BlockQuestions;
+import dao.BlockQuestionDao;
+import model.BlockQuestion;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Scanner;
 
 public class StartAppImpl implements StartApp {
 
-    private final FileDao fileDao;
+    private final BlockQuestionDao blockQuestionDao;
 
-    public StartAppImpl(FileDao fileDao) {
-        this.fileDao = fileDao;
+    private final IOService ioService;
+
+    public StartAppImpl(BlockQuestionDao blockQuestionDao, IOService ioService) {
+        this.blockQuestionDao = blockQuestionDao;
+        this.ioService = ioService;
     }
 
     public void getStart() {
-        List<BlockQuestions> blockQuestionsList = fileDao.getBlockQuestions();
-        try (Scanner scanner = new Scanner(System.in)) {
-            workOfConsole(blockQuestionsList, scanner);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<BlockQuestion> blockQuestionList = blockQuestionDao.getBlockQuestions();
+        workOfConsole(blockQuestionList);
     }
 
-    private void workOfConsole(List<BlockQuestions> blockQuestionsList, Scanner scanner) {
+    private void workOfConsole(List<BlockQuestion> blockQuestionList) {
         int balls = 0;
-        System.out.print("Введите свое имя: ");
-        String name = scanner.nextLine();
-        for (BlockQuestions blockQuestions : blockQuestionsList) {
-            printMainBlock(blockQuestions);
-            int numberAnswer;
+        ioService.print("Введите свое имя: ");
+        String name = ioService.nextLine();
+        for (BlockQuestion blockQuestion : blockQuestionList) {
+            printMainBlock(blockQuestion);
             do {
                 try {
-                    numberAnswer = scanner.nextInt();
-                    balls += checkAnswer(blockQuestions, numberAnswer);
+                    balls += checkAnswer(blockQuestion, Integer.parseInt(ioService.nextLine()));
                     break;
                 } catch (Exception e) {
-                    System.out.printf("Введите число от 1 до %d: ", blockQuestions.getAnswers().keySet().size());
-                    scanner.next();
+                    ioService.print(MessageFormat.format("Введите число от 1 до {0}: \n",
+                            blockQuestion.getAnswers().keySet().size()));
                 }
             } while (true);
-            System.out.println("Ваш ответ принят");
+            ioService.print("Ваш ответ принят" + "\n");
         }
         if (balls >= 3) {
-            System.out.printf("Great job, %s! Your scores: %d", name, balls);
+            ioService.print(MessageFormat.format("Great job, {0}! Your scores: {1}", name, balls));
         } else {
-            System.out.printf("Sorry, %s...try again. Your scores: %d", name, balls);
+            ioService.print(MessageFormat.format("Sorry, {0}...try again. Your scores: {1}", name, balls));
         }
     }
 
 
-    private int checkAnswer(BlockQuestions blockQuestions, int numberAnswer) {
-        if (blockQuestions.getAnswers().get(numberAnswer)
-                .equalsIgnoreCase(blockQuestions.getTrueAnswer())) {
+    private int checkAnswer(BlockQuestion blockQuestion, int numberAnswer) {
+        if (blockQuestion.getAnswers().get(numberAnswer).isTrue()) {
             return 1;
         }
         return 0;
     }
 
-    private void printMainBlock(BlockQuestions blockQuestions) {
-        System.out.println(blockQuestions.getQuestion());
-        blockQuestions.getAnswers().forEach((key, value) -> {
-            System.out.print(MessageFormat.format("{0}.", key));
-            System.out.println(value);
+    private void printMainBlock(BlockQuestion blockQuestion) {
+        ioService.print(blockQuestion.getQuestion() + "\n");
+        blockQuestion.getAnswers().forEach((key, answer) -> {
+            ioService.print(MessageFormat.format("{0}.", key));
+            ioService.print(answer.getContext() + "\n");
         });
-        System.out.print("Enter your number answer: ");
+        ioService.print("Enter your number answer: ");
     }
 }

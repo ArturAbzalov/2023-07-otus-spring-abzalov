@@ -4,13 +4,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 		https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="fileDao" class="dao.FileDaoImpl">
+    <bean id="blockQuestionDao" class="dao.CsvBlockQuestionDaoImpl">
         <constructor-arg name="resource" value="blockQuestions.csv" type="org.springframework.core.io.Resource"/>
-        <constructor-arg name="parser" ref="parser"/>
     </bean>
-    <bean id="parser" class="utils.Parser"/>
+    <bean id="ioService" class="service.ConsoleIOService" />
     <bean id="startApp" class="service.StartAppImpl">
-        <constructor-arg name="fileDao" ref="fileDao"/>
+        <constructor-arg name="blockQuestionDao" ref="blockQuestionDao"/>
+        <constructor-arg name="ioService" ref="ioService"/>
     </bean>
-
 </beans>
