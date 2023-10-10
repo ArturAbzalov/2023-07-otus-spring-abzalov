@@ -1,0 +1,9 @@
+spring:
+  messages:
+    fallback-to-system-locale: false
+
+file:
+  locale: ru-RU
+  csv-resource-map:
+    ru_RU: blockQuestions_Ru.csv
+    en_US: blockQuestions_En.csv
