@@ -2,8 +2,6 @@ package month_1.config;
 
 import java.util.Locale;
 
-public interface LocaleConfig {
-    String getPath();
-
+public interface LocaleProvider {
     Locale getLocale();
 }

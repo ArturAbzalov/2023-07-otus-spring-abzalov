@@ -11,14 +11,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties(LocaleConfigTest.class)
+@EnableConfigurationProperties({LocaleProviderTest.class, ResourceProviderTest.class})
 public class TestConfig {
 
     @Autowired
     private MessageSource messageSource;
 
     @Autowired
-    private LocaleConfigTest localeConfig;
+    private LocaleProviderTest localeConfig;
+
+    @Autowired
+    private ResourceProviderTest resourceProviderTest;
 
 
     @Bean
@@ -28,7 +31,7 @@ public class TestConfig {
 
     @Bean
     public BlockQuestionDao blockQuestionDao() {
-        return new CsvBlockQuestionDaoImpl(localeConfig, localizationService());
+        return new CsvBlockQuestionDaoImpl(resourceProviderTest, localizationService());
     }
 
 }

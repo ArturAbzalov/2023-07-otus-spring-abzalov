@@ -1,6 +1,6 @@
 package month_1.dao;
 
-import month_1.config.LocaleConfig;
+import month_1.config.ResourceProvider;
 import month_1.exception.ParseException;
 import month_1.model.Answer;
 import month_1.model.BlockQuestion;
@@ -18,12 +18,12 @@ import java.util.List;
 @Component
 public class CsvBlockQuestionDaoImpl implements BlockQuestionDao {
 
-    private final LocaleConfig localeConfigImpl;
+    private final ResourceProvider resourceProvider;
 
     private final LocalizationService localizationService;
 
-    public CsvBlockQuestionDaoImpl(LocaleConfig localeConfigImpl, LocalizationService localizationService) {
-        this.localeConfigImpl = localeConfigImpl;
+    public CsvBlockQuestionDaoImpl(ResourceProvider resourceProvider, LocalizationService localizationService) {
+        this.resourceProvider = resourceProvider;
         this.localizationService = localizationService;
     }
 
@@ -31,7 +31,7 @@ public class CsvBlockQuestionDaoImpl implements BlockQuestionDao {
         List<BlockQuestion> blockQuestionList = new ArrayList<>();
         try (BufferedReader bufferedReader =
                      new BufferedReader(new InputStreamReader(
-                             new ClassPathResource(localeConfigImpl.getPath()).getInputStream()))) {
+                             new ClassPathResource(resourceProvider.getPath()).getInputStream()))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] strings = line.split(",");
