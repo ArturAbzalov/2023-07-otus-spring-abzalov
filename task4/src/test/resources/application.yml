@@ -1,0 +1,15 @@
+spring:
+  messages:
+    fallback-to-system-locale: false
+  shell:
+    interactive:
+      enabled: false
+
+myapp:
+  fileset:
+    locale: en-US
+
+  resource-set:
+    csv-resource-map:
+      ru_RU: testBlockQuestions_Ru.csv
+      en_US: testBlockQuestions_En.csv
