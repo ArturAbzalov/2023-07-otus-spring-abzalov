@@ -19,7 +19,17 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public List<Genre> getAllGenres() {
-        return genreDao.getAllGenre();
+    public List<Genre> getAll() {
+        return genreDao.getAll();
+    }
+
+    @Override
+    public Genre getById(Long id) {
+        return genreDao.getById(id);
+    }
+
+    @Override
+    public Genre create(String name) {
+        return genreDao.create(name);
     }
 }

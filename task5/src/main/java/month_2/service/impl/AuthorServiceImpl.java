@@ -19,7 +19,17 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> getAllAuthors() {
-        return authorDao.getAllAuthors();
+    public List<Author> getAll() {
+        return authorDao.getAll();
+    }
+
+    @Override
+    public Author getById(Long id) {
+        return authorDao.getById(id);
+    }
+
+    @Override
+    public Author create(String firstName, String lastName) {
+        return authorDao.create(firstName, lastName);
     }
 }

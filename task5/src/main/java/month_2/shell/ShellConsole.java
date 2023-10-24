@@ -1,6 +1,7 @@
 package month_2.shell;
 
 
+import month_2.dto.BookDto;
 import month_2.service.AuthorService;
 import month_2.service.BookService;
 import month_2.service.GenreService;
@@ -42,40 +43,58 @@ public class ShellConsole {
     @ShellMethodAvailability("availabilityCheck")
     public void createBook(@ShellOption String bookName,
                            @ShellOption String firstName, @ShellOption String lastName, @ShellOption String genreName) {
-        bookService.createBook(bookName, firstName, lastName, genreName);
-        System.out.println("Is success!");
+        BookDto bookDto = BookDto.builder()
+                .name(bookName)
+                .authorFirstName(firstName)
+                .authorLastName(lastName)
+                .genreName(genreName)
+                .build();
+        System.out.println("Is success! Book is create! " + bookService.create(bookDto));
     }
 
     @ShellMethod(key = "delete-book")
     @ShellMethodAvailability("availabilityCheck")
     public void deleteBook(@ShellOption long id) {
-        bookService.deleteBookById(id);
+        bookService.deleteById(id);
         System.out.println("Is success!");
     }
 
     @ShellMethod(key = "update-book")
     @ShellMethodAvailability("availabilityCheck")
-    public void updateBook(@ShellOption String bookName,
+    public void updateBook(@ShellOption Long id, @ShellOption String bookName,
                            @ShellOption String firstName, @ShellOption String lastName, @ShellOption String genreName) {
-        bookService.updateBook(bookName, firstName, lastName, genreName);
-        System.out.println("Is success!");
+        BookDto bookDto = BookDto.builder()
+                .id(id)
+                .name(bookName)
+                .authorFirstName(firstName)
+                .authorLastName(lastName)
+                .genreName(genreName)
+                .build();
+        System.out.println("Is success! Book is update: " + bookService.update(bookDto));
     }
+
+    @ShellMethod(key = "get-book-by-id")
+    @ShellMethodAvailability("availabilityCheck")
+    public void getBookById(@ShellOption Long id) {
+        System.out.println(bookService.getById(id));
+    }
+
 
     @ShellMethod(key = "get-books")
     @ShellMethodAvailability("availabilityCheck")
     public void getBooks() {
-        System.out.println(bookService.getAllBooks());
+        System.out.println(bookService.getAll());
     }
 
     @ShellMethod(key = "get-authors")
     @ShellMethodAvailability("availabilityCheck")
     public void getAuthors() {
-        System.out.println(authorService.getAllAuthors());
+        System.out.println(authorService.getAll());
     }
 
     @ShellMethod(key = "get-genres")
     @ShellMethodAvailability("availabilityCheck")
     public void getGenres() {
-        System.out.println(genreService.getAllGenres());
+        System.out.println(genreService.getAll());
     }
 }

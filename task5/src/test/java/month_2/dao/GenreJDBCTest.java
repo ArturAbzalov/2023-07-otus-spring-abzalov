@@ -22,14 +22,30 @@ public class GenreJDBCTest {
 
     @Test
     void getAllGenreTest() {
-        List<Genre> genreList = genreDao.getAllGenre();
+        List<Genre> genreList = genreDao.getAll();
         log.info(genreList.toString());
-        Genre genre = Genre.builder().id(1).name("roman").build();
+        Genre genre = Genre.builder().id(1L).name("roman").build();
         int genreListSize = genreList.size();
         log.info("Genre list size: {} ", genreListSize);
         Assertions.assertEquals(2, genreListSize);
         boolean ifContains = genreList.contains(genre);
         log.info("Genre contains list: {}", ifContains);
         Assertions.assertTrue(ifContains);
+    }
+
+    @Test
+    void create() {
+        int beforeCreateListSize = genreDao.getAll().size();
+        Assertions.assertEquals(2, beforeCreateListSize);
+        genreDao.create("Test");
+        genreDao.create("Test");
+        int afterCreateListSize = genreDao.getAll().size();
+        Assertions.assertEquals(3, afterCreateListSize);
+    }
+
+    @Test
+    void getById() {
+        Genre genre = Genre.builder().id(1L).name("roman").build();
+        Assertions.assertEquals(genre, genreDao.getById(1L));
     }
 }

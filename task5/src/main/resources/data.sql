@@ -1,17 +1,19 @@
 insert into authors (firstname, lastname)
-values ('alexey', 'tolstoy');
+values ('Lev', 'Tolstoy');
 insert into authors (firstname, lastname)
-values ( 'aine', 'rend');
+values ('Ayn', 'Rand');
 insert into authors (firstname, lastname)
-values ( 'robert', 'lafore');
+values ('Robert', 'Lafore');
 insert into authors (firstname, lastname)
-values ( 'key', 'hortsmann');
+values ('Cay', 'Horstmann');
 
-insert into genres ( GENRENAME)
-values ( 'roman');
+insert into genres (GENRENAME)
+values ('roman');
+insert into genres (GENRENAME)
+values ('fantasy');
 
 insert into books (bookname, author_id, genre_id)
-values ('war&peace', 1, 1);
+values ('War&peace', 1, 1);
 insert into books (bookname, author_id, genre_id)
 values ('Atlant', 2, 1);
 insert into books (bookname, author_id, genre_id)

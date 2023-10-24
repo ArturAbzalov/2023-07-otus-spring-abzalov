@@ -1,16 +1,23 @@
 package month_2.domain;
 
-import lombok.Builder;
-import lombok.Data;
 
-@Data
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
 @Builder
+@ToString
+@EqualsAndHashCode
+@Setter
 public class Book {
-    private long id;
+    private Long id;
 
     private String name;
 
-    private Author author;
+    private Long authorId;
 
-    private Genre genre;
+    private Long genreId;
 }

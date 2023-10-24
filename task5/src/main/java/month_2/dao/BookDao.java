@@ -5,11 +5,13 @@ import month_2.domain.Book;
 import java.util.List;
 
 public interface BookDao {
-    void createBook(Book book);
+    Book create(Book book);
 
-    void deleteBookById(long id);
+    void deleteById(long id);
 
-    List<Book> getAllBooks();
+    List<Book> getAll();
 
-    void updateBook(Book book);
+    Book update(Book book);
+
+    Book getById(long id);
 }

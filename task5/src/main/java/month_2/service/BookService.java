@@ -1,15 +1,17 @@
 package month_2.service;
 
-import month_2.domain.Book;
+import month_2.dto.BookDto;
 
 import java.util.List;
 
 public interface BookService {
-    void createBook(String name, String firstName, String lastName, String genreName);
+    BookDto create(BookDto bookDto);
 
-    void deleteBookById(long id);
+    void deleteById(long id);
 
-    List<Book> getAllBooks();
+    List<BookDto> getAll();
 
-    void updateBook(String name, String firstName, String lastName, String genreName);
+    BookDto update(BookDto bookDto);
+
+    BookDto getById(Long id);
 }
