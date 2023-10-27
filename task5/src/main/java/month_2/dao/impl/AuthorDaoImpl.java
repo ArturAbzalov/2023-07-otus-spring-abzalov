@@ -3,7 +3,6 @@ package month_2.dao.impl;
 import lombok.extern.slf4j.Slf4j;
 import month_2.dao.AuthorDao;
 import month_2.domain.Author;
-import month_2.exception.IdNullException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 @Repository
 @Slf4j
@@ -36,20 +35,15 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public Author create(String firstName, String lastName) {
+    public Author create(Author author) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        Long id = null;
         jdbc.update("merge into authors(firstname,lastname) key (firstname,lastname) values (:firstName,:lastName)"
-                , new MapSqlParameterSource(Map.of("firstName", firstName, "lastName", lastName)), keyHolder);
-        try {
-            id = Optional.ofNullable(keyHolder.getKey()).orElseThrow(IdNullException::new).longValue();
-        } catch (IdNullException e) {
-            log.debug("Ошибка при получении id автора, id = null");
-        }
+                , new MapSqlParameterSource(Map.of("firstName", author.getFirstName(), "lastName",
+                        author.getLastName())), keyHolder);
         return Author.builder()
-                .id(id)
-                .firstName(firstName)
-                .lastName(lastName)
+                .id(Objects.requireNonNull(keyHolder.getKey()).longValue())
+                .firstName(author.getFirstName())
+                .lastName(author.getLastName())
                 .build();
     }
 

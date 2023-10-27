@@ -2,8 +2,12 @@ package month_2.service.impl;
 
 import month_2.dao.AuthorDao;
 import month_2.domain.Author;
+import month_2.dto.AuthorDto;
+import month_2.exception.AuthorNotFoundException;
+import month_2.mapper.AuthorMapper;
 import month_2.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +17,12 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorDao authorDao;
 
+    private final AuthorMapper authorMapper;
+
     @Autowired
-    public AuthorServiceImpl(AuthorDao authorDao) {
+    public AuthorServiceImpl(AuthorDao authorDao, AuthorMapper authorMapper) {
         this.authorDao = authorDao;
+        this.authorMapper = authorMapper;
     }
 
     @Override
@@ -25,11 +32,15 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author getById(Long id) {
-        return authorDao.getById(id);
+        try {
+            return authorDao.getById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new AuthorNotFoundException(String.format("Author with id: %d not found", id));
+        }
     }
 
     @Override
-    public Author create(String firstName, String lastName) {
-        return authorDao.create(firstName, lastName);
+    public Author create(AuthorDto authorDto) {
+        return authorDao.create(authorMapper.toEntity(authorDto));
     }
 }

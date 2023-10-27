@@ -2,8 +2,9 @@ package month_2.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import month_2.dao.BookDao;
+import month_2.domain.Author;
 import month_2.domain.Book;
-import month_2.exception.IdNullException;
+import month_2.domain.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,7 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 @Repository
 @Slf4j
@@ -32,17 +33,11 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Book create(Book book) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        Long id = null;
         jdbc.update("merge into books(bookname, author_id, genre_id) key(bookname, author_id, genre_id) " +
                         "values(:bookname,:author_id,:genre_id)",
-                new MapSqlParameterSource(Map.of("bookname", book.getName(), "author_id", book.getAuthorId(),
-                        "genre_id", book.getGenreId())), keyHolder);
-        try {
-            id = Optional.ofNullable(keyHolder.getKey()).orElseThrow(IdNullException::new).longValue();
-        } catch (IdNullException e) {
-            log.debug("Ошибка при получении id книги, id = null");
-        }
-        book.setId(id);
+                new MapSqlParameterSource(Map.of("bookname", book.getName(), "author_id", book.getAuthor().getId(),
+                        "genre_id", book.getGenre().getId())), keyHolder);
+        book.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
         return book;
     }
 
@@ -54,18 +49,19 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public List<Book> getAll() {
-        return jdbc.query("select book_id, bookname, author_id, genre_id from books " +
-                "join authors on books.author_id=authors.id " +
-                "join genres on books.genre_id=genres.id", new BookMapper());
+        return jdbc
+                .query("select book_id, bookname,firstname,lastname,genrename,author_id,genre_id from books " +
+                        "left join authors on books.author_id=authors.id " +
+                        "left join genres on books.genre_id=genres.id", new BookMapper());
     }
 
     @Override
     public Book update(Book book) {
-         jdbc.update("update books set bookname=:bookname,author_id=:author_id,genre_id=:genre_id " +
-                        "where book_id=:book_id", new MapSqlParameterSource(
+        jdbc.update("update books set bookname=:bookname,author_id=:author_id,genre_id=:genre_id " +
+                "where book_id=:book_id", new MapSqlParameterSource(
                 Map.of("book_id", book.getId(), "bookname", book.getName(),
-                        "genre_id", book.getGenreId(), "author_id", book.getAuthorId())));
-         return book;
+                        "genre_id", book.getGenre().getId(), "author_id", book.getAuthor().getId())));
+        return book;
     }
 
     @Override
@@ -80,13 +76,20 @@ public class BookDaoImpl implements BookDao {
 
         @Override
         public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Long authorId = rs.getLong("author_id");
-            Long genreId = rs.getLong("genre_id");
+            Author author = Author.builder()
+                    .id(rs.getLong("author_id"))
+                    .firstName(rs.getString("firstname"))
+                    .lastName(rs.getString("lastname"))
+                    .build();
+            Genre genre = Genre.builder()
+                    .id(rs.getLong("genre_id"))
+                    .name(rs.getString("genrename"))
+                    .build();
             return Book.builder()
                     .id(rs.getLong("book_id"))
                     .name(rs.getString("bookname"))
-                    .genreId(genreId)
-                    .authorId(authorId)
+                    .author(author)
+                    .genre(genre)
                     .build();
         }
     }

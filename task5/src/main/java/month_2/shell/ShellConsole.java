@@ -1,7 +1,9 @@
 package month_2.shell;
 
 
+import month_2.dto.AuthorDto;
 import month_2.dto.BookDto;
+import month_2.dto.GenreDto;
 import month_2.service.AuthorService;
 import month_2.service.BookService;
 import month_2.service.GenreService;
@@ -42,12 +44,11 @@ public class ShellConsole {
     @ShellMethod(key = "create-book")
     @ShellMethodAvailability("availabilityCheck")
     public void createBook(@ShellOption String bookName,
-                           @ShellOption String firstName, @ShellOption String lastName, @ShellOption String genreName) {
+                           @ShellOption Long authorId, @ShellOption Long genreId) {
         BookDto bookDto = BookDto.builder()
                 .name(bookName)
-                .authorFirstName(firstName)
-                .authorLastName(lastName)
-                .genreName(genreName)
+                .authorDto(AuthorDto.builder().authorId(authorId).build())
+                .genreDto(GenreDto.builder().genreId(genreId).build())
                 .build();
         System.out.println("Is success! Book is create! " + bookService.create(bookDto));
     }
@@ -62,13 +63,12 @@ public class ShellConsole {
     @ShellMethod(key = "update-book")
     @ShellMethodAvailability("availabilityCheck")
     public void updateBook(@ShellOption Long id, @ShellOption String bookName,
-                           @ShellOption String firstName, @ShellOption String lastName, @ShellOption String genreName) {
+                           @ShellOption Long authorId, @ShellOption Long genreId) {
         BookDto bookDto = BookDto.builder()
                 .id(id)
                 .name(bookName)
-                .authorFirstName(firstName)
-                .authorLastName(lastName)
-                .genreName(genreName)
+                .authorDto(AuthorDto.builder().authorId(authorId).build())
+                .genreDto(GenreDto.builder().genreId(genreId).build())
                 .build();
         System.out.println("Is success! Book is update: " + bookService.update(bookDto));
     }

@@ -4,11 +4,10 @@ package month_2.domain;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
+//Getter используется в мапперах, Equals&hashcode в тестах, без них некоррентно сравнивает объекты
 @Getter
 @Builder
-@ToString
 @EqualsAndHashCode
 public class Author {
     private Long id;

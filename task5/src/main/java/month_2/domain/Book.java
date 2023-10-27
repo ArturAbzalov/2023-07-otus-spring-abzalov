@@ -5,19 +5,18 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
+//Getter используется в мапперах, Equals&hashcode в тестах, без них некоррентно сравнивает объекты
 @Getter
 @Builder
-@ToString
-@EqualsAndHashCode
 @Setter
+@EqualsAndHashCode
 public class Book {
     private Long id;
 
     private String name;
 
-    private Long authorId;
+    private Author author;
 
-    private Long genreId;
+    private Genre genre;
 }

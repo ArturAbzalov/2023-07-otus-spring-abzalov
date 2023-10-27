@@ -37,8 +37,9 @@ public class AuthorJDBCTest {
     void create() {
         int beforeCreateListSize = authorDao.getAll().size();
         Assertions.assertEquals(4, beforeCreateListSize);
-        authorDao.create("One","One");
-        authorDao.create("One","One");
+        Author author = Author.builder().firstName("One").lastName("One").build();
+        authorDao.create(author);
+        authorDao.create(author);
         int afterCreateListSize = authorDao.getAll().size();
         Assertions.assertEquals(5, afterCreateListSize);
     }

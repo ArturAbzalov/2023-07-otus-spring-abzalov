@@ -7,7 +7,7 @@ import java.util.List;
 public interface AuthorDao {
     List<Author> getAll();
 
-    Author create(String name, String lastName);
+    Author create(Author author);
 
     Author getById(Long id);
 }

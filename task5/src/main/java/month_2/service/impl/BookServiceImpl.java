@@ -1,15 +1,15 @@
 package month_2.service.impl;
 
 import month_2.dao.BookDao;
-import month_2.domain.Author;
 import month_2.domain.Book;
-import month_2.domain.Genre;
 import month_2.dto.BookDto;
+import month_2.exception.BookNotFoundException;
 import month_2.mapper.BookMapper;
 import month_2.service.AuthorService;
 import month_2.service.BookService;
 import month_2.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,12 +36,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto create(BookDto bookDto) {
-        Author author = authorService.create(bookDto.getAuthorFirstName(), bookDto.getAuthorLastName());
-        Genre genre = genreService.create(bookDto.getGenreName());
-        bookDto.setAuthorId(author.getId());
-        bookDto.setGenreId(genre.getId());
+        checkExists(bookDto);
         Book book = bookMapper.toEntity(bookDto);
-        return bookMapper.toDto(bookDao.create(book), author, genre);
+        return bookMapper.toDto(bookDao.create(book));
     }
 
     @Override
@@ -52,26 +49,32 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> getAll() {
         List<Book> bookList = bookDao.getAll();
-        List<Genre> genreList = genreService.getAll();
-        List<Author> authorList = authorService.getAll();
-        return bookMapper.toListDto(bookList, genreList, authorList);
+        return bookMapper.toListDto(bookList);
     }
 
     @Override
     public BookDto update(BookDto bookDto) {
-        Author author = authorService.create(bookDto.getAuthorFirstName(), bookDto.getAuthorLastName());
-        Genre genre = genreService.create(bookDto.getGenreName());
-        bookDto.setAuthorId(author.getId());
-        bookDto.setGenreId(genre.getId());
-        Book book = bookMapper.toEntity(bookDto);
-        return bookMapper.toDto(bookDao.update(book), author, genre);
+        checkExists(bookDto);
+        try {
+            bookDao.getById(bookDto.getId());
+            return bookMapper.toDto(bookDao.update(bookMapper.toEntity(bookDto)));
+        } catch (EmptyResultDataAccessException e) {
+            throw new BookNotFoundException(String.format("Book with id: %d not found", bookDto.getId()));
+        }
     }
 
     @Override
     public BookDto getById(Long id) {
-        Book book = bookDao.getById(id);
-        Author author = authorService.getById(book.getAuthorId());
-        Genre genre = genreService.getById(book.getGenreId());
-        return bookMapper.toDto(book, author, genre);
+        try {
+            Book book = bookDao.getById(id);
+            return bookMapper.toDto(book);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BookNotFoundException(String.format("Book with id: %d not found", id));
+        }
+    }
+
+    private void checkExists(BookDto bookDto) {
+        authorService.getById(bookDto.getAuthorDto().getAuthorId());
+        genreService.getById(bookDto.getGenreDto().getGenreId());
     }
 }

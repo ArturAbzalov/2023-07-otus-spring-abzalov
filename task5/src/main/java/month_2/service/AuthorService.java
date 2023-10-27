@@ -1,6 +1,7 @@
 package month_2.service;
 
 import month_2.domain.Author;
+import month_2.dto.AuthorDto;
 
 import java.util.List;
 
@@ -9,5 +10,5 @@ public interface AuthorService {
 
     Author getById(Long id);
 
-    Author create(String firstName, String lastName);
+    Author create(AuthorDto authorDto);
 }

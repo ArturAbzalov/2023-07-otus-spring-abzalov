@@ -3,7 +3,6 @@ package month_2.dao.impl;
 import lombok.extern.slf4j.Slf4j;
 import month_2.dao.GenreDao;
 import month_2.domain.Genre;
-import month_2.exception.IdNullException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 @Repository
 @Slf4j
@@ -36,19 +35,13 @@ public class GenreDaoImpl implements GenreDao {
     }
 
     @Override
-    public Genre create(String genreName) {
+    public Genre create(Genre genre) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        Long id = null;
         jdbc.update("merge into genres(genrename) key (genrename) values (:genreName)"
-                , new MapSqlParameterSource(Map.of("genreName", genreName)), keyHolder);
-        try {
-            id = Optional.ofNullable(keyHolder.getKey()).orElseThrow(IdNullException::new).longValue();
-        } catch (IdNullException e) {
-            log.debug("Ошибка при получении id жанра, id = null");
-        }
+                , new MapSqlParameterSource(Map.of("genreName", genre.getName())), keyHolder);
         return Genre.builder()
-                .id(id)
-                .name(genreName)
+                .id(Objects.requireNonNull(keyHolder.getKey()).longValue())
+                .name(genre.getName())
                 .build();
     }
 
