@@ -1,7 +1,9 @@
 package month_2.mapper;
 
 
+import month_2.domain.Author;
 import month_2.domain.Book;
+import month_2.domain.Genre;
 import month_2.dto.BookDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,12 +24,12 @@ public class BookMapper {
     }
 
 
-    public Book toEntity(BookDto bookDto) {
+    public Book toEntity(BookDto bookDto, Genre genre, Author author) {
         return Book.builder()
                 .id(bookDto.getId())
                 .name(bookDto.getName())
-                .genre(genreMapper.toEntity(bookDto.getGenreDto()))
-                .author(authorMapper.toEntity(bookDto.getAuthorDto()))
+                .genre(genre)
+                .author(author)
                 .build();
     }
 

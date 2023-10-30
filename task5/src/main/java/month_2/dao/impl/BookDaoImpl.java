@@ -6,6 +6,7 @@ import month_2.domain.Author;
 import month_2.domain.Book;
 import month_2.domain.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -18,6 +19,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -33,9 +35,9 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Book create(Book book) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update("merge into books(bookname, author_id, genre_id) key(bookname, author_id, genre_id) " +
-                        "values(:bookname,:author_id,:genre_id)",
-                new MapSqlParameterSource(Map.of("bookname", book.getName(), "author_id", book.getAuthor().getId(),
+        jdbc.update("insert into books(bookname, author_id, genre_id) values(:bookname,:author_id,:genre_id)",
+                new MapSqlParameterSource(Map.of("bookname", book.getName(),
+                        "author_id", book.getAuthor().getId(),
                         "genre_id", book.getGenre().getId())), keyHolder);
         book.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
         return book;
@@ -49,8 +51,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public List<Book> getAll() {
-        return jdbc
-                .query("select book_id, bookname,firstname,lastname,genrename,author_id,genre_id from books " +
+        return jdbc.query("select book_id, bookname,firstname,lastname,genrename,author_id,genre_id from books " +
                         "left join authors on books.author_id=authors.id " +
                         "left join genres on books.genre_id=genres.id", new BookMapper());
     }
@@ -65,11 +66,16 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public Book getById(long id) {
-        return jdbc.queryForObject("select book_id, bookname,firstname,lastname,genrename,author_id,genre_id " +
-                        "from books join authors on books.author_id=authors.id " +
-                        "join genres on books.genre_id=genres.id where book_id=:book_id",
-                Map.of("book_id", id), new BookMapper());
+    public Optional<Book> getById(long id) {
+        try {
+            return Optional.ofNullable(
+                    jdbc.queryForObject("select book_id, bookname,firstname,lastname,genrename,author_id,genre_id "
+                                    + "from books join authors on books.author_id=authors.id " +
+                            "join genres on books.genre_id=genres.id where book_id=:book_id",
+                    Map.of("book_id", id), new BookMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     private static class BookMapper implements RowMapper<Book> {

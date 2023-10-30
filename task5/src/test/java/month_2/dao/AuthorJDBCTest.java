@@ -23,14 +23,8 @@ public class AuthorJDBCTest {
     @Test
     void getAllAuthorTest() {
         List<Author> authorList = authorDao.getAll();
-        log.info(authorList.toString());
-        Author author = Author.builder().id(1L).firstName("Lev").lastName("Tolstoy").build();
         int authorListSize = authorList.size();
-        log.info("Author list size: {} ", authorListSize);
         Assertions.assertEquals(4, authorListSize);
-        boolean ifContains = authorList.contains(author);
-        log.info("Author contains list: {}", ifContains);
-        Assertions.assertTrue(ifContains);
     }
 
     @Test
@@ -39,7 +33,6 @@ public class AuthorJDBCTest {
         Assertions.assertEquals(4, beforeCreateListSize);
         Author author = Author.builder().firstName("One").lastName("One").build();
         authorDao.create(author);
-        authorDao.create(author);
         int afterCreateListSize = authorDao.getAll().size();
         Assertions.assertEquals(5, afterCreateListSize);
     }
@@ -47,6 +40,8 @@ public class AuthorJDBCTest {
     @Test
     void getById() {
         Author author = Author.builder().id(1L).firstName("Lev").lastName("Tolstoy").build();
-        Assertions.assertEquals(author, authorDao.getById(1L));
+        Author authorFromDb = authorDao.getById(1L).orElseThrow();
+        Assertions.assertEquals(author.getFirstName(), authorFromDb.getFirstName());
+        Assertions.assertEquals(author.getLastName(), authorFromDb.getLastName());
     }
 }

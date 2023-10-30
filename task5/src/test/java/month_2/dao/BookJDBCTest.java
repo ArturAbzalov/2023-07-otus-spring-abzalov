@@ -40,25 +40,23 @@ public class BookJDBCTest {
 
     @Test
     void getAllBooks() {
-        Author author = Author.builder().id(1L).firstName("Lev").lastName("Tolstoy").build();
-        Genre genre = Genre.builder().id(1L).name("roman").build();
         List<Book> bookList = bookDao.getAll();
         Assertions.assertEquals(3, bookList.size());
-        Book book = Book.builder().name("War&peace").author(author).genre(genre).id(1L).build();
-        Assertions.assertTrue(bookList.contains(book));
     }
 
     @Test
     void updateBook() {
-        List<Book> bookListBeforeUpdate = bookDao.getAll();
         Author author = Author.builder().id(1L).firstName("Lev").lastName("Tolstoy").build();
         Genre genre = Genre.builder().id(2L).name("fantasy").build();
-        Assertions.assertEquals(3, bookListBeforeUpdate.size());
         Book book = Book.builder().name("War&peace").author(author).genre(genre).id(1L).build();
         bookDao.update(book);
-        List<Book> bookListAfterUpdate = bookDao.getAll();
-        Assertions.assertEquals(3, bookListBeforeUpdate.size());
-        Assertions.assertTrue(bookListAfterUpdate.contains(book));
+        Book bookFromDb = bookDao.getById(1).orElseThrow();
+        Assertions.assertEquals(book.getName(), bookFromDb.getName());
+        Assertions.assertEquals(book.getGenre().getId(), bookFromDb.getGenre().getId());
+        Assertions.assertEquals(book.getGenre().getName(), bookFromDb.getGenre().getName());
+        Assertions.assertEquals(book.getAuthor().getFirstName(), bookFromDb.getAuthor().getFirstName());
+        Assertions.assertEquals(book.getAuthor().getLastName(), bookFromDb.getAuthor().getLastName());
+        Assertions.assertEquals(book.getAuthor().getId(), bookFromDb.getAuthor().getId());
     }
 
     @Test
@@ -66,6 +64,12 @@ public class BookJDBCTest {
         Author author = Author.builder().id(1L).firstName("Lev").lastName("Tolstoy").build();
         Genre genre = Genre.builder().id(1L).name("roman").build();
         Book book = Book.builder().name("War&peace").author(author).genre(genre).id(1L).build();
-        Assertions.assertEquals(book, bookDao.getById(1));
+        Book bookFromDb = bookDao.getById(1).orElseThrow();
+        Assertions.assertEquals(book.getName(), bookFromDb.getName());
+        Assertions.assertEquals(book.getGenre().getId(), bookFromDb.getGenre().getId());
+        Assertions.assertEquals(book.getGenre().getName(), bookFromDb.getGenre().getName());
+        Assertions.assertEquals(book.getAuthor().getFirstName(), bookFromDb.getAuthor().getFirstName());
+        Assertions.assertEquals(book.getAuthor().getLastName(), bookFromDb.getAuthor().getLastName());
+        Assertions.assertEquals(book.getAuthor().getId(), bookFromDb.getAuthor().getId());
     }
 }

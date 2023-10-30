@@ -3,6 +3,7 @@ package month_2.dao;
 import month_2.domain.Book;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookDao {
     Book create(Book book);
@@ -13,5 +14,5 @@ public interface BookDao {
 
     Book update(Book book);
 
-    Book getById(long id);
+    Optional<Book> getById(long id);
 }

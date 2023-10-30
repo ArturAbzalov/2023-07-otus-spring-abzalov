@@ -3,11 +3,10 @@ package month_2.service.impl;
 import month_2.dao.GenreDao;
 import month_2.domain.Genre;
 import month_2.dto.GenreDto;
-import month_2.exception.GenreNotFoundException;
+import month_2.exception.NotFoundException;
 import month_2.mapper.GenreMapper;
 import month_2.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,11 +31,8 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre getById(Long id) {
-        try {
-            return genreDao.getById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new GenreNotFoundException(String.format("Genre with id: %d not found", id));
-        }
+        return genreDao.getById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Genre with id: %d not found", id)));
     }
 
     @Override
