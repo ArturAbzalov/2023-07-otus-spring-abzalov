@@ -15,7 +15,7 @@ import java.util.List;
 @DataJpaTest
 @Import(AuthorDaoImpl.class)
 @Slf4j
-public class AuthorJPaTest {
+public class AuthorDaoImplTest {
 
     @Autowired
     private AuthorDao authorDao;

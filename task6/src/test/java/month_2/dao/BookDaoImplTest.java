@@ -16,7 +16,7 @@ import java.util.List;
 
 @DataJpaTest
 @Import({BookDaoImpl.class, CommentDaoImpl.class})
-public class BookJpaTest {
+public class BookDaoImplTest {
 
     @Autowired
     private BookDao bookDao;

@@ -1,31 +1,31 @@
-insert into authors (firstname, lastname)
+merge into authors (firstname, lastname) key (firstname, lastname)
 values ('Lev', 'Tolstoy');
-insert into authors (firstname, lastname)
+merge into authors (firstname, lastname) key (firstname, lastname)
 values ('Ayn', 'Rand');
-insert into authors (firstname, lastname)
+merge into authors (firstname, lastname) key (firstname, lastname)
 values ('Robert', 'Lafore');
-insert into authors (firstname, lastname)
+merge into authors (firstname, lastname) key (firstname, lastname)
 values ('Cay', 'Horstmann');
 
-insert into genres (GENRENAME)
+merge into genres (genrename) key (genrename)
 values ('roman');
-insert into genres (GENRENAME)
+merge into genres (genrename) key (genrename)
 values ('fantasy');
 
-insert into books (bookname, author_id, genre_id)
+merge into books (bookname, author_id, genre_id) key (bookname, author_id, genre_id)
 values ('War&peace', 1, 1);
-insert into books (bookname, author_id, genre_id)
+merge into books (bookname, author_id, genre_id) key (bookname, author_id, genre_id)
 values ('Atlant', 2, 1);
-insert into books (bookname, author_id, genre_id)
+merge into books (bookname, author_id, genre_id) key (bookname, author_id, genre_id)
 values ('Atlant2', 2, 1);
 
-insert into comments (message, book_id)
+merge into comments (message, book_id) key (message, book_id)
 values ('excellent',1);
-insert into comments (message, book_id)
+merge into comments (message, book_id) key (message, book_id)
 values ('perfect',1);
-insert into comments (message, book_id)
+merge into comments (message, book_id) key (message, book_id)
 values ('this is good',1);
-insert into comments (message, book_id)
+merge into comments (message, book_id) key (message, book_id)
 values ('nice',2);
-insert into comments (message, book_id)
+merge into comments (message, book_id) key (message, book_id)
 values ('grand',2);

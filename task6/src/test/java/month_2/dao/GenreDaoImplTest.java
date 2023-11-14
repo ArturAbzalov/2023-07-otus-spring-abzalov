@@ -15,7 +15,7 @@ import java.util.List;
 @DataJpaTest
 @Import(GenreDaoImpl.class)
 @Slf4j
-public class GenreJpaTest {
+public class GenreDaoImplTest {
 
     @Autowired
     private GenreDao genreDao;

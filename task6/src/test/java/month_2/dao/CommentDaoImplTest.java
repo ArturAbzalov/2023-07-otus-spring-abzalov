@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 
 @DataJpaTest
 @Import(CommentDaoImpl.class)
-public class CommentJpaTest {
+public class CommentDaoImplTest {
 
     @Autowired
     private CommentDao commentDao;
