@@ -1,6 +1,6 @@
 package month_2.service.impl;
 
-import month_2.dao.AuthorDao;
+import month_2.dao.AuthorRepository;
 import month_2.domain.Author;
 import month_2.dto.AuthorDto;
 import month_2.exception.NotFoundException;
@@ -15,26 +15,26 @@ import java.util.List;
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
-    private final AuthorDao authorDao;
+    private final AuthorRepository authorRepository;
 
     private final AuthorMapper authorMapper;
 
     @Autowired
-    public AuthorServiceImpl(AuthorDao authorDao, AuthorMapper authorMapper) {
-        this.authorDao = authorDao;
+    public AuthorServiceImpl(AuthorRepository authorRepository, AuthorMapper authorMapper) {
+        this.authorRepository = authorRepository;
         this.authorMapper = authorMapper;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<AuthorDto> getAll() {
-        return authorMapper.toListDto(authorDao.findAll());
+        return authorMapper.toListDto(authorRepository.findAll());
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public AuthorDto getById(Long id) {
-        Author author =  authorDao.findById(id)
+        Author author =  authorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Author with id: %d not found", id)));
         return authorMapper.toDto(author);
     }
@@ -42,7 +42,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public AuthorDto create(AuthorDto authorDto) {
-        Author author = authorDao.save(authorMapper.toEntity(authorDto));
+        Author author = authorRepository.save(authorMapper.toEntity(authorDto));
         return authorMapper.toDto(author);
     }
 }

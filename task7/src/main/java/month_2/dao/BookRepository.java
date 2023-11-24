@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookDao extends JpaRepository<Book, Long> {
+public interface BookRepository extends JpaRepository<Book, Long> {
     @EntityGraph(value = "book-entity-graph")
     List<Book> findAll();
 

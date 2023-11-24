@@ -1,6 +1,6 @@
 package month_2.service.impl;
 
-import month_2.dao.GenreDao;
+import month_2.dao.GenreRepository;
 import month_2.domain.Genre;
 import month_2.dto.GenreDto;
 import month_2.exception.NotFoundException;
@@ -15,26 +15,26 @@ import java.util.List;
 @Service
 public class GenreServiceImpl implements GenreService {
 
-    private final GenreDao genreDao;
+    private final GenreRepository genreRepository;
 
     private final GenreMapper genreMapper;
 
     @Autowired
-    public GenreServiceImpl(GenreDao genreDao, GenreMapper genreMapper) {
-        this.genreDao = genreDao;
+    public GenreServiceImpl(GenreRepository genreRepository, GenreMapper genreMapper) {
+        this.genreRepository = genreRepository;
         this.genreMapper = genreMapper;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<GenreDto> getAll() {
-        return genreMapper.toListDto(genreDao.findAll());
+        return genreMapper.toListDto(genreRepository.findAll());
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public GenreDto getById(Long id) {
-        Genre genre =  genreDao.findById(id)
+        Genre genre =  genreRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Genre with id: %d not found", id)));
         return genreMapper.toDto(genre);
     }
@@ -42,7 +42,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     @Transactional
     public GenreDto create(GenreDto genreDto) {
-        Genre genre = genreDao.save(genreMapper.toEntity(genreDto));
+        Genre genre = genreRepository.save(genreMapper.toEntity(genreDto));
         return genreMapper.toDto(genre);
     }
 }

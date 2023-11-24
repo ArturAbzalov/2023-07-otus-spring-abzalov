@@ -1,7 +1,7 @@
 package month_2.service.impl;
 
-import month_2.dao.BookDao;
-import month_2.dao.CommentDao;
+import month_2.dao.BookRepository;
+import month_2.dao.CommentRepository;
 import month_2.domain.Book;
 import month_2.domain.Comment;
 import month_2.dto.CommentDto;
@@ -18,30 +18,31 @@ import java.util.List;
 @Service
 public class CommentServiceImpl implements CommentService {
 
-    private final CommentDao commentDao;
+    private final CommentRepository commentRepository;
 
     private final CommentMapper commentMapper;
 
-    private final BookDao bookDao;
+    private final BookRepository bookRepository;
 
     @Autowired
-    public CommentServiceImpl(CommentDao commentDao, CommentMapper commentMapper, BookDao bookDao) {
-        this.commentDao = commentDao;
+    public CommentServiceImpl(CommentRepository commentRepository, CommentMapper commentMapper,
+                              BookRepository bookRepository) {
+        this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
-        this.bookDao = bookDao;
+        this.bookRepository = bookRepository;
     }
 
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<CommentDto> getListByBookId(Long bookId) {
-        return commentMapper.toListDto(commentDao.getAllByBookId(bookId));
+        return commentMapper.toListDto(commentRepository.getAllByBookId(bookId));
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public CommentDto getById(Long commentId) {
-        Comment comment = commentDao.findById(commentId)
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(
                         String.format("Author with id: %d not found", commentId)));
         return commentMapper.toDto(comment);
@@ -50,17 +51,17 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentDto create(CommentDto commentDto) {
-        Book book = bookDao.findById(commentDto.getId())
+        Book book = bookRepository.findById(commentDto.getId())
                 .orElseThrow(() -> new NotFoundException(
                         String.format("Author with id: %d not found", commentDto.getId())));
         Comment comment = commentMapper.toEntity(commentDto, book);
-        return commentMapper.toDto(commentDao.save(comment));
+        return commentMapper.toDto(commentRepository.save(comment));
     }
 
     @Override
     @Transactional
     public CommentDto update(CommentDto commentDto) {
-        Comment comment = commentDao.findById(commentDto.getId())
+        Comment comment = commentRepository.findById(commentDto.getId())
                 .orElseThrow(() -> new NotFoundException(
                         String.format("Comment with id: %d not found", commentDto.getId())));
         if (!comment.getBook().getId().equals(commentDto.getId())) {
@@ -69,12 +70,12 @@ public class CommentServiceImpl implements CommentService {
                             comment.getBook().getId(),commentDto.getId()));
         }
         comment.setMessage(commentDto.getMessage());
-        return commentMapper.toDto(commentDao.save(comment));
+        return commentMapper.toDto(commentRepository.save(comment));
     }
 
     @Override
     @Transactional
     public void deleteById(Long id) {
-        commentDao.deleteById(id);
+        commentRepository.deleteById(id);
     }
 }
