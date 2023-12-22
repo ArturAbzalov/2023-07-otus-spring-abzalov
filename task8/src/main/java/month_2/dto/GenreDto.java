@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class GenreDto {
 
-    private String genreId;
+    private String id;
 
-    private String genreName;
+    private String name;
 }

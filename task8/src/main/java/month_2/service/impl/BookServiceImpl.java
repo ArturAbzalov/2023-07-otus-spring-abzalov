@@ -39,12 +39,12 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookDto create(BookDto bookDto) {
-        Author author = authorRepository.findById(bookDto.getAuthorDto().getAuthorId())
+        Author author = authorRepository.findById(bookDto.getAuthorDto().getId())
                 .orElseThrow(() -> new NotFoundException(String.format("Author with id: %s not found",
-                        bookDto.getAuthorDto().getAuthorId())));
-        Genre genre = genreRepository.findById(bookDto.getGenreDto().getGenreId())
+                        bookDto.getAuthorDto().getId())));
+        Genre genre = genreRepository.findById(bookDto.getGenreDto().getId())
                 .orElseThrow(() -> new NotFoundException(String.format("Genre with id: %s not found",
-                        bookDto.getGenreDto().getGenreId())));
+                        bookDto.getGenreDto().getId())));
         Book book = bookMapper.toEntity(bookDto, genre, author);
         return bookMapper.toDto(bookRepository.save(book));
     }
@@ -70,12 +70,12 @@ public class BookServiceImpl implements BookService {
     public BookDto update(BookDto bookDto) {
         bookRepository.findById(bookDto.getId())
                 .orElseThrow(() -> new NotFoundException(String.format("Book with id: %s not found", bookDto.getId())));
-        Author author = authorRepository.findById(bookDto.getAuthorDto().getAuthorId())
+        Author author = authorRepository.findById(bookDto.getAuthorDto().getId())
                 .orElseThrow(() -> new NotFoundException(String.format("Author with id: %s not found",
-                        bookDto.getAuthorDto().getAuthorId())));
-        Genre genre = genreRepository.findById(bookDto.getGenreDto().getGenreId())
+                        bookDto.getAuthorDto().getId())));
+        Genre genre = genreRepository.findById(bookDto.getGenreDto().getId())
                 .orElseThrow(() -> new NotFoundException(String.format("Genre with id: %s not found",
-                        bookDto.getGenreDto().getGenreId())));
+                        bookDto.getGenreDto().getId())));
         return bookMapper.toDto(bookRepository.save(bookMapper.toEntity(bookDto, genre, author)));
     }
 

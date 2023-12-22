@@ -10,9 +10,9 @@ import lombok.ToString;
 @ToString
 public class AuthorDto {
 
-    private String authorId;
+    private String id;
 
-    private String authorFirstName;
+    private String firstName;
 
-    private String authorLastName;
+    private String lastName;
 }

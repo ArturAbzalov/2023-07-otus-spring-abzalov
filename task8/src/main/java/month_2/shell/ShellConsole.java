@@ -53,8 +53,8 @@ public class ShellConsole {
                            @ShellOption String authorId, @ShellOption String genreId) {
         BookDto bookDto = BookDto.builder()
                 .name(bookName)
-                .authorDto(AuthorDto.builder().authorId(authorId).build())
-                .genreDto(GenreDto.builder().genreId(genreId).build())
+                .authorDto(AuthorDto.builder().id(authorId).build())
+                .genreDto(GenreDto.builder().id(genreId).build())
                 .build();
         System.out.println("Is success! Book is create! " + bookService.create(bookDto));
     }
@@ -73,8 +73,8 @@ public class ShellConsole {
         BookDto bookDto = BookDto.builder()
                 .id(id)
                 .name(bookName)
-                .authorDto(AuthorDto.builder().authorId(authorId).build())
-                .genreDto(GenreDto.builder().genreId(genreId).build())
+                .authorDto(AuthorDto.builder().id(authorId).build())
+                .genreDto(GenreDto.builder().id(genreId).build())
                 .build();
         System.out.println("Is success! Book is update: " + bookService.update(bookDto));
     }
