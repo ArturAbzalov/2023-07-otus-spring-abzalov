@@ -11,17 +11,17 @@ public class AuthorMapper {
 
     public Author toEntity(AuthorDto authorDto) {
         return Author.builder()
-                .id(authorDto.getAuthorId())
-                .firstName(authorDto.getAuthorFirstName())
-                .lastName(authorDto.getAuthorLastName())
+                .id(authorDto.getId())
+                .firstName(authorDto.getFirstName())
+                .lastName(authorDto.getLastName())
                 .build();
     }
 
     public AuthorDto toDto(Author author) {
         return AuthorDto.builder()
-                .authorFirstName(author.getFirstName())
-                .authorLastName(author.getLastName())
-                .authorId(author.getId())
+                .firstName(author.getFirstName())
+                .lastName(author.getLastName())
+                .id(author.getId())
                 .build();
     }
 

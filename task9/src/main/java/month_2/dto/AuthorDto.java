@@ -1,18 +1,24 @@
 package month_2.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Builder
 @ToString
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthorDto {
 
-    private Long authorId;
+    private Long id;
 
-    private String authorFirstName;
+    private String firstName;
 
-    private String authorLastName;
+    private String lastName;
 }

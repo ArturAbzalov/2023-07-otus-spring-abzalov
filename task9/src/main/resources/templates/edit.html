@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Book edition -->
+<form id="edit-form" th:method="put" th:action="@{/books}" th:object="${bookDto}">
+    <h3>Book Info:</h3>
+
+    <div class="row">
+        <label for="id-input">ID:</label>
+        <input id="id-input" type="text" th:name="id" readonly="readonly" th:value="*{id}"/>
+    </div>
+    <div class="row">
+        <label for="book-name-input">Name:</label>
+        <input id="book-name-input" th:name="name" type="text" th:value="*{name}"/>
+    </div>
+    <div class="row">
+        <input type="hidden" th:object="${authorDto}" th:name="authorDto.id" th:value="*{id}"/>
+    </div>
+    <div class="row">
+        <label for="book-author-firstname-input">AuthorFistName:</label>
+        <input id="book-author-firstname-input" th:object="${authorDto}" th:name="authorDto.firstName" th:value="*{firstName}"/>
+    </div>
+    <div class="row">
+        <label for="book-author-lastname-input">AuthorLastName:</label>
+        <input id="book-author-lastname-input" th:object="${authorDto}" th:name="authorDto.lastName" th:value="*{lastName}"/>
+    </div>
+    <div class="row">
+        <input type="hidden" th:object="${genreDto}"  th:name="genreDto.id"  th:value="*{id}"/>
+    </div>
+    <div class="row">
+        <label for="book-genre-input">GenreName:</label>
+        <input id="book-genre-input" th:object="${genreDto}"  th:name="genreDto.name"  th:value="*{name}"/>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+        <a href="list.html" th:method="get" th:href="@{/books}"><button type="button">Cancel</button></a>
+    </div>
+</form>
+
+</body>
+</html>

@@ -2,47 +2,53 @@ package month_2.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import month_2.domain.Book;
 import month_2.dto.BookDto;
 import month_2.service.BookService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequiredArgsConstructor
 public class BookController {
 
     private final BookService bookService;
 
     @GetMapping("/books")
-    public List<BookDto> getAll() {
-        return bookService.getAll();
+    public String getAll(Model model) {
+        model.addAttribute("books", bookService.getAll());
+        return "list";
     }
 
     @GetMapping(value = "/books", params = "id")
-    public List<BookDto> getBook(@RequestParam long id) {
-        return null;
+    public String getBook(@RequestParam long id, Model model) {
+        BookDto bookDto = bookService.getById(id);
+        model.addAttribute("bookDto", bookDto);
+        model.addAttribute("authorDto", bookDto.getAuthorDto());
+        model.addAttribute("genreDto", bookDto.getGenreDto());
+        return "edit";
     }
 
-    @PostMapping
-    public Book create() {
-        return null;
+    @PostMapping("/books")
+    public String create(BookDto bookDto) {
+        bookService.create(bookDto);
+        return "redirect:/books";
     }
 
-    @PatchMapping
-    public Book update() {
-        return null;
+    @PutMapping("/books")
+    public String update(BookDto bookDto) {
+        bookService.update(bookDto);
+        return "redirect:/books";
     }
 
-    @DeleteMapping
-    public Book delete() {
-        return null;
+    @DeleteMapping("/books")
+    public String delete(@RequestParam long id) {
+        bookService.deleteById(id);
+        return "redirect:/books";
     }
 
 
