@@ -3,7 +3,9 @@ package month_2.controller;
 
 import lombok.RequiredArgsConstructor;
 import month_2.dto.BookDto;
+import month_2.service.AuthorService;
 import month_2.service.BookService;
+import month_2.service.GenreService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,10 @@ public class BookController {
 
     private final BookService bookService;
 
+    private final GenreService genreService;
+
+    private final AuthorService authorService;
+
     @GetMapping("/books")
     public String getAll(Model model) {
         model.addAttribute("books", bookService.getAll());
@@ -28,9 +34,17 @@ public class BookController {
     public String getBook(@RequestParam long id, Model model) {
         BookDto bookDto = bookService.getById(id);
         model.addAttribute("bookDto", bookDto);
-        model.addAttribute("authorDto", bookDto.getAuthorDto());
-        model.addAttribute("genreDto", bookDto.getGenreDto());
+        model.addAttribute("genres", genreService.getAll());
+        model.addAttribute("authors", authorService.getAll());
         return "edit";
+    }
+
+    @GetMapping("/books/create")
+    public String getFormCreate(Model model) {
+        model.addAttribute("bookDto",new BookDto());
+        model.addAttribute("genres", genreService.getAll());
+        model.addAttribute("authors", authorService.getAll());
+        return "create";
     }
 
     @PostMapping("/books")
@@ -50,6 +64,4 @@ public class BookController {
         bookService.deleteById(id);
         return "redirect:/books";
     }
-
-
 }

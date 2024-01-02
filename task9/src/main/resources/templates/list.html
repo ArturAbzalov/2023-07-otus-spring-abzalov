@@ -35,6 +35,7 @@
         <th>Author firstname</th>
         <th>Author lastname</th>
         <th>Genre</th>
+        <th>Action</th>
     </tr>
     </thead>
     <tbody>
@@ -45,13 +46,18 @@
         <td th:text="${book.authorDto.lastName}"></td>
         <td th:text="${book.genreDto.name}"></td>
         <td>
-            <a href="edit.html" th:href="@{/books(id=${book.id})}">Edit</a>
+            <a class="btn-link" th:href="@{/books(id=${book.id})}">
+                <button>Edit</button>
+            </a>
+            <form th:action="@{/books(id = ${book.id})}" th:method="delete">
+                <button type="submit" class="btn-link">Delete</button>
+            </form>
         </td>
     </tr>
     </tbody>
 </table>
-<!--<div class="row">-->
-<!--    <a th:href="@{/books(id=${book.id})}">Create new book</a>-->
-<!--</div>-->
+<div class="row">
+    <a th:href="@{/books/create}"><button>Create new book</button></a>
+</div>
 </body>
 </html>
