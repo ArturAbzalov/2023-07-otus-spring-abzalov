@@ -4,7 +4,9 @@ package month_2.mapper;
 import month_2.domain.Author;
 import month_2.domain.Book;
 import month_2.domain.Genre;
-import month_2.dto.BookDto;
+import month_2.dto.book.BookCreateDto;
+import month_2.dto.book.BookDto;
+import month_2.dto.book.BookUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,12 +26,29 @@ public class BookMapper {
     }
 
 
-    public Book toEntity(BookDto bookDto, Genre genre, Author author) {
+    public Book toEntity(BookCreateDto bookCreateDto) {
         return Book.builder()
-                .id(bookDto.getId())
-                .name(bookDto.getName())
-                .genre(genre)
+                .name(bookCreateDto.getName())
+                .author(Author.builder().id(bookCreateDto.getAuthorId()).build())
+                .genre(Genre.builder().id(bookCreateDto.getGenreId()).build())
+                .build();
+    }
+
+    public Book toEntity(BookUpdateDto bookUpdateDto, Author author, Genre genre) {
+        return Book.builder()
+                .id(bookUpdateDto.getId())
+                .name(bookUpdateDto.getName())
                 .author(author)
+                .genre(genre)
+                .build();
+    }
+
+    public BookUpdateDto toUpdateDto(Book book) {
+        return BookUpdateDto.builder()
+                .id(book.getId())
+                .name(book.getName())
+                .genreId(book.getGenre().getId())
+                .authorId(book.getAuthor().getId())
                 .build();
     }
 

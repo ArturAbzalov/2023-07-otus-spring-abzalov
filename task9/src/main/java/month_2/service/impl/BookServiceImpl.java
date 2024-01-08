@@ -6,7 +6,9 @@ import month_2.dao.GenreRepository;
 import month_2.domain.Author;
 import month_2.domain.Book;
 import month_2.domain.Genre;
-import month_2.dto.BookDto;
+import month_2.dto.book.BookCreateDto;
+import month_2.dto.book.BookDto;
+import month_2.dto.book.BookUpdateDto;
 import month_2.exception.NotFoundException;
 import month_2.mapper.BookMapper;
 import month_2.service.BookService;
@@ -38,23 +40,20 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto create(BookDto bookDto) {
-        Author author = authorRepository.findById(bookDto.getAuthorDto().getId())
+    public BookDto create(BookCreateDto bookCreateDto) {
+        Author author = authorRepository.findById(bookCreateDto.getAuthorId())
                 .orElseThrow(() -> new NotFoundException(String.format("Author with id: %d not found",
-                        bookDto.getAuthorDto().getId())));
-        Genre genre = genreRepository.findById(bookDto.getGenreDto().getId())
+                        bookCreateDto.getAuthorId())));
+        Genre genre = genreRepository.findById(bookCreateDto.getGenreId())
                 .orElseThrow(() -> new NotFoundException(String.format("Genre with id: %d not found",
-                        bookDto.getGenreDto().getId())));
-        Book book = bookMapper.toEntity(bookDto, genre, author);
+                        bookCreateDto.getGenreId())));
+        Book book = bookMapper.toEntity(bookCreateDto);
         return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override
     @Transactional
     public void deleteById(long id) {
-        if (!bookRepository.existsById(id)) {
-            throw new NotFoundException(String.format("Book with id: %d not found", id));
-        }
         bookRepository.deleteById(id);
     }
 
@@ -67,23 +66,24 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto update(BookDto bookDto) {
-        bookRepository.findById(bookDto.getId())
-                .orElseThrow(() -> new NotFoundException(String.format("Book with id: %d not found", bookDto.getId())));
-        Author author = authorRepository.findById(bookDto.getAuthorDto().getId())
+    public BookDto update(BookUpdateDto bookUpdateDto) {
+        bookRepository.findById(bookUpdateDto.getId())
+                .orElseThrow(() -> new NotFoundException(String.format("Book with id: %d not found",
+                        bookUpdateDto.getId())));
+        Author author = authorRepository.findById(bookUpdateDto.getAuthorId())
                 .orElseThrow(() -> new NotFoundException(String.format("Author with id: %d not found",
-                        bookDto.getAuthorDto().getId())));
-        Genre genre = genreRepository.findById(bookDto.getGenreDto().getId())
+                        bookUpdateDto.getAuthorId())));
+        Genre genre = genreRepository.findById(bookUpdateDto.getGenreId())
                 .orElseThrow(() -> new NotFoundException(String.format("Genre with id: %d not found",
-                        bookDto.getGenreDto().getId())));
-        return bookMapper.toDto(bookRepository.save(bookMapper.toEntity(bookDto, genre, author)));
+                        bookUpdateDto.getGenreId())));
+        return bookMapper.toDto(bookRepository.save(bookMapper.toEntity(bookUpdateDto, author, genre)));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public BookDto getById(Long id) {
+    public BookUpdateDto getById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Book with id: %d not found", id)));
-        return bookMapper.toDto(book);
+        return bookMapper.toUpdateDto(book);
     }
 }

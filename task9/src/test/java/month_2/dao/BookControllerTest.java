@@ -2,8 +2,10 @@ package month_2.dao;
 
 import month_2.controller.BookController;
 import month_2.dto.AuthorDto;
-import month_2.dto.BookDto;
 import month_2.dto.GenreDto;
+import month_2.dto.book.BookCreateDto;
+import month_2.dto.book.BookDto;
+import month_2.dto.book.BookUpdateDto;
 import month_2.service.AuthorService;
 import month_2.service.BookService;
 import month_2.service.GenreService;
@@ -67,7 +69,7 @@ public class BookControllerTest {
         GenreDto secondGenre = GenreDto.builder().id(1L).name("fantasy").build();
         List<GenreDto> genreDtoList = List.of(firstGenre, secondGenre);
         List<AuthorDto> authorDtoList = List.of(firstAuthor, secondAuthor);
-        BookDto firstBook = BookDto.builder().id(1L).authorDto(firstAuthor).genreDto(firstGenre).name("War&peace").build();
+        BookUpdateDto firstBook = BookUpdateDto.builder().id(1L).authorId(1L).genreId(1L).name("War&peace").build();
         when(genreService.getAll()).thenReturn(genreDtoList);
         when(authorService.getAll()).thenReturn(authorDtoList);
         when(bookService.getById(id)).thenReturn(firstBook);
@@ -93,10 +95,10 @@ public class BookControllerTest {
     void create() throws Exception {
         mockMvc.perform(post("/books")
                 .param("name","Test")
-                .param("authorDto.id","1")
-                .param("genreDto.id","1"))
+                .param("authorId","1")
+                .param("genreId","1"))
                 .andExpect(status().is3xxRedirection());
-        verify(bookService).create(BookDto.builder().name("Test").genreDto(GenreDto.builder().id(1L).build()).authorDto(AuthorDto.builder().id(1L).build()).build());
+        verify(bookService).create(BookCreateDto.builder().name("Test").genreId(1L).authorId(1L).build());
     }
 
     @Test
@@ -104,13 +106,13 @@ public class BookControllerTest {
         mockMvc.perform(put("/books")
                 .param("id","1")
                 .param("name","War")
-                .param("authorDto.id","1")
-                .param("genreDto.id","1"))
+                .param("authorId","1")
+                .param("genreId","1"))
                 .andExpect(status().is3xxRedirection());
-        verify(bookService).update(BookDto.builder()
+        verify(bookService).update(BookUpdateDto.builder()
                 .id(1L).name("War")
-                .genreDto(GenreDto.builder().id(1L).build())
-                .authorDto(AuthorDto.builder().id(1L).build())
+                .genreId(1L)
+                .authorId(1L)
                 .build());
     }
 }

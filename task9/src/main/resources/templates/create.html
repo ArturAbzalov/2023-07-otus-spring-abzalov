@@ -29,11 +29,11 @@
     <h3>Book Info:</h3>
     <div class="row">
         <label for="book-name-input">Name:</label>
-        <input id="book-name-input" th:name="name" type="text" required/>
+        <input id="book-name-input" th:name="name" type="text"/>
     </div>
     <div class="row">
         <label for="book-authors">Author: </label>
-        <select id="book-authors" th:field="*{authorDto.id}">
+        <select id="book-authors" th:field="*{authorId}">
             <option
                     th:each="author : ${authors}"
                     th:value="${author.id}"
@@ -43,7 +43,7 @@
     </div>
     <div class="row">
         <label for="book-genres">Genre: </label>
-        <select id="book-genres" th:field="*{genreDto.id}">
+        <select id="book-genres" th:field="*{genreId}">
             <option th:each="genre : ${genres}"
                     th:value="${genre.id}"
                     th:text="${genre.name}">

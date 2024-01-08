@@ -30,7 +30,7 @@
 
     <div class="row">
         <label for="id-input">ID:</label>
-        <input id="id-input" type="text" th:name="id" readonly="readonly" th:value="*{id}" required/>
+        <input id="id-input" type="text" th:name="id" readonly="readonly" th:value="*{id}"/>
     </div>
     <div class="row">
         <label for="book-name-input">Name:</label>
@@ -38,7 +38,7 @@
     </div>
     <div class="row">
         <label for="book-authors">Author: </label>
-        <select id="book-authors" th:field="*{authorDto.id}">
+        <select id="book-authors" th:field="*{authorId}">
             <option
                     th:each="author : ${authors}"
                     th:value="${author.id}"
@@ -48,7 +48,7 @@
     </div>
     <div class="row">
         <label for="book-genres">Genre: </label>
-        <select id="book-genres" th:field="*{genreDto.id}">
+        <select id="book-genres" th:field="*{genreId}">
             <option th:each="genre : ${genres}"
                     th:value="${genre.id}"
                     th:text="${genre.name}">

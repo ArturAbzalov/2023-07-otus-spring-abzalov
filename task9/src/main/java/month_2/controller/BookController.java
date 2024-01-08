@@ -1,8 +1,10 @@
 package month_2.controller;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import month_2.dto.BookDto;
+import month_2.dto.book.BookCreateDto;
+import month_2.dto.book.BookUpdateDto;
 import month_2.service.AuthorService;
 import month_2.service.BookService;
 import month_2.service.GenreService;
@@ -32,8 +34,8 @@ public class BookController {
 
     @GetMapping(value = "/books", params = "id")
     public String getBook(@RequestParam long id, Model model) {
-        BookDto bookDto = bookService.getById(id);
-        model.addAttribute("bookDto", bookDto);
+        BookUpdateDto bookUpdateDto = bookService.getById(id);
+        model.addAttribute("bookDto", bookUpdateDto);
         model.addAttribute("genres", genreService.getAll());
         model.addAttribute("authors", authorService.getAll());
         return "edit";
@@ -41,21 +43,21 @@ public class BookController {
 
     @GetMapping("/books/create")
     public String getFormCreate(Model model) {
-        model.addAttribute("bookDto",new BookDto());
+        model.addAttribute("bookDto",new BookCreateDto());
         model.addAttribute("genres", genreService.getAll());
         model.addAttribute("authors", authorService.getAll());
         return "create";
     }
 
     @PostMapping("/books")
-    public String create(BookDto bookDto) {
-        bookService.create(bookDto);
+    public String create(@Valid BookCreateDto bookCreateDto) {
+        bookService.create(bookCreateDto);
         return "redirect:/books";
     }
 
     @PutMapping("/books")
-    public String update(BookDto bookDto) {
-        bookService.update(bookDto);
+    public String update(@Valid BookUpdateDto bookUpdateDto) {
+        bookService.update(bookUpdateDto);
         return "redirect:/books";
     }
 

@@ -5,7 +5,6 @@ import month_2.dao.CommentRepository;
 import month_2.domain.Book;
 import month_2.domain.Comment;
 import month_2.dto.CommentDto;
-import month_2.exception.InconsistencyIdException;
 import month_2.exception.NotFoundException;
 import month_2.mapper.CommentMapper;
 import month_2.service.CommentService;
@@ -64,11 +63,6 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentDto.getId())
                 .orElseThrow(() -> new NotFoundException(
                         String.format("Comment with id: %d not found", commentDto.getId())));
-        if (!comment.getBook().getId().equals(commentDto.getId())) {
-            throw new InconsistencyIdException
-                    (String.format("The received id does not match from DB: expected %d, actual %d",
-                            comment.getBook().getId(),commentDto.getId()));
-        }
         comment.setMessage(commentDto.getMessage());
         return commentMapper.toDto(commentRepository.save(comment));
     }
