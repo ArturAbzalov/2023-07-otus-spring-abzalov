@@ -3,7 +3,10 @@ package month_2.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import month_2.dto.AuthorDto;
+import month_2.dto.GenreDto;
 import month_2.dto.book.BookCreateDto;
+import month_2.dto.book.BookDto;
 import month_2.dto.book.BookUpdateDto;
 import month_2.service.AuthorService;
 import month_2.service.BookService;
@@ -51,7 +54,11 @@ public class BookController {
 
     @PostMapping("/books")
     public String create(@Valid BookCreateDto bookCreateDto) {
-        bookService.create(bookCreateDto);
+        bookService.create(BookDto.builder()
+                .name(bookCreateDto.getName())
+                .authorDto(AuthorDto.builder().id(bookCreateDto.getAuthorId()).build())
+                .genreDto(GenreDto.builder().id(bookCreateDto.getGenreId()).build())
+                .build());
         return "redirect:/books";
     }
 

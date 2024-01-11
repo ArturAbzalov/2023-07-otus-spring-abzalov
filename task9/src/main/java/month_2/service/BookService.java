@@ -1,6 +1,5 @@
 package month_2.service;
 
-import month_2.dto.book.BookCreateDto;
 import month_2.dto.book.BookDto;
 import month_2.dto.book.BookUpdateDto;
 
@@ -14,7 +13,7 @@ public interface BookService {
 
     BookDto update(BookUpdateDto bookUpdateDto);
 
-    BookDto create(BookCreateDto bookCreateDto);
+    BookDto create(BookDto bookDto);
 
     BookUpdateDto getById(Long id);
 }

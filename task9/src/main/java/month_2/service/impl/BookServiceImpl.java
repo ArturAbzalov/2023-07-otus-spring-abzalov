@@ -6,7 +6,6 @@ import month_2.dao.GenreRepository;
 import month_2.domain.Author;
 import month_2.domain.Book;
 import month_2.domain.Genre;
-import month_2.dto.book.BookCreateDto;
 import month_2.dto.book.BookDto;
 import month_2.dto.book.BookUpdateDto;
 import month_2.exception.NotFoundException;
@@ -40,14 +39,14 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto create(BookCreateDto bookCreateDto) {
-        Author author = authorRepository.findById(bookCreateDto.getAuthorId())
+    public BookDto create(BookDto bookDto) {
+        Author author = authorRepository.findById(bookDto.getAuthorDto().getId())
                 .orElseThrow(() -> new NotFoundException(String.format("Author with id: %d not found",
-                        bookCreateDto.getAuthorId())));
-        Genre genre = genreRepository.findById(bookCreateDto.getGenreId())
+                        bookDto.getAuthorDto().getId())));
+        Genre genre = genreRepository.findById(bookDto.getGenreDto().getId())
                 .orElseThrow(() -> new NotFoundException(String.format("Genre with id: %d not found",
-                        bookCreateDto.getGenreId())));
-        Book book = bookMapper.toEntity(bookCreateDto);
+                        bookDto.getGenreDto().getId())));
+        Book book = bookMapper.toEntity(bookDto, genre, author);
         return bookMapper.toDto(bookRepository.save(book));
     }
 

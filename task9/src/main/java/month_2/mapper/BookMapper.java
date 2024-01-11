@@ -4,7 +4,6 @@ package month_2.mapper;
 import month_2.domain.Author;
 import month_2.domain.Book;
 import month_2.domain.Genre;
-import month_2.dto.book.BookCreateDto;
 import month_2.dto.book.BookDto;
 import month_2.dto.book.BookUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +25,12 @@ public class BookMapper {
     }
 
 
-    public Book toEntity(BookCreateDto bookCreateDto) {
+    public Book toEntity(BookDto bookDto, Genre genre, Author author) {
         return Book.builder()
-                .name(bookCreateDto.getName())
-                .author(Author.builder().id(bookCreateDto.getAuthorId()).build())
-                .genre(Genre.builder().id(bookCreateDto.getGenreId()).build())
+                .id(bookDto.getId())
+                .name(bookDto.getName())
+                .genre(genre)
+                .author(author)
                 .build();
     }
 

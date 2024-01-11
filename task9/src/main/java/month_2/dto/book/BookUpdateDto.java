@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class BookUpdateDto {
 
+    @NotNull
     private Long id;
 
     @NotBlank(message = "Поле name не должно быть пустым")

@@ -3,7 +3,6 @@ package month_2.dao;
 import month_2.controller.BookController;
 import month_2.dto.AuthorDto;
 import month_2.dto.GenreDto;
-import month_2.dto.book.BookCreateDto;
 import month_2.dto.book.BookDto;
 import month_2.dto.book.BookUpdateDto;
 import month_2.service.AuthorService;
@@ -94,11 +93,11 @@ public class BookControllerTest {
     @Test
     void create() throws Exception {
         mockMvc.perform(post("/books")
-                .param("name","Test")
-                .param("authorId","1")
-                .param("genreId","1"))
+                        .param("name","Test")
+                        .param("authorId","1")
+                        .param("genreId","1"))
                 .andExpect(status().is3xxRedirection());
-        verify(bookService).create(BookCreateDto.builder().name("Test").genreId(1L).authorId(1L).build());
+        verify(bookService).create(BookDto.builder().name("Test").genreDto(GenreDto.builder().id(1L).build()).authorDto(AuthorDto.builder().id(1L).build()).build());
     }
 
     @Test
