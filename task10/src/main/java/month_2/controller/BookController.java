@@ -1,0 +1,85 @@
+package month_2.controller;
+
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import month_2.dto.AuthorDto;
+import month_2.dto.GenreDto;
+import month_2.dto.book.BookCreateDto;
+import month_2.dto.book.BookDto;
+import month_2.dto.book.BookUpdateDto;
+import month_2.service.AuthorService;
+import month_2.service.BookService;
+import month_2.service.GenreService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+
+@Controller
+@RequiredArgsConstructor
+public class BookController {
+
+    private final BookService bookService;
+
+    private final GenreService genreService;
+
+    private final AuthorService authorService;
+
+    @GetMapping("/books")
+    @ResponseBody
+    public ResponseEntity<List<BookDto>> getAll() {
+        return ResponseEntity.ok(bookService.getAll());
+    }
+
+    @GetMapping("/books/all")
+    public String get() {
+        return "list";
+    }
+
+    @GetMapping(value = "/books", params = "id")
+    public String getBook(@RequestParam long id, Model model) {
+        BookUpdateDto bookUpdateDto = bookService.getById(id);
+        model.addAttribute("bookDto", bookUpdateDto);
+        model.addAttribute("genres", genreService.getAll());
+        model.addAttribute("authors", authorService.getAll());
+        return "edit";
+    }
+
+    @GetMapping("/books/create")
+    public String getFormCreate(Model model) {
+        model.addAttribute("bookDto",new BookCreateDto());
+        model.addAttribute("genres", genreService.getAll());
+        model.addAttribute("authors", authorService.getAll());
+        return "create";
+    }
+
+    @PostMapping("/books")
+    public String create(@Valid BookCreateDto bookCreateDto) {
+        bookService.create(BookDto.builder()
+                .name(bookCreateDto.getName())
+                .authorDto(AuthorDto.builder().id(bookCreateDto.getAuthorId()).build())
+                .genreDto(GenreDto.builder().id(bookCreateDto.getGenreId()).build())
+                .build());
+        return "redirect:/books/all";
+    }
+
+    @PutMapping("/books")
+    public String update(@Valid BookUpdateDto bookUpdateDto) {
+        bookService.update(bookUpdateDto);
+        return "redirect:/books/all";
+    }
+
+    @DeleteMapping("/books")
+    public String delete(@RequestParam long id) {
+        bookService.deleteById(id);
+        return "redirect:/books/all";
+    }
+}
